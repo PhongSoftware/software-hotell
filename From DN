@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using QLKS.Dungchung; */link data
+using System.Data.SqlClient;
+namespace QLKS.GiaoDien.MENU
+{
+    public partial class DANGNHAP : Form
+    {
+        public DANGNHAP()
+        {
+            InitializeComponent();
+        }
+       
+        private void btndangnhap_Click(object sender, EventArgs e)
+        {
+            string user = "DUY";
+            string pass = "123456";
+            if (user.Equals(txttendangnhap.Text) && pass.Equals(txtmatkhau.Text))
+            {
+                MessageBox.Show("Dang nhap thanh cong");
+                this.Close();
+            }
+            else
+                MessageBox.Show("Sai tai khoan hoac mat khau");
+        }
+
+        private void btnthoat_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
