@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using QLKS.Dungchung;
+
+namespace QLKS.GiaoDien.DICHVU
+{
+    public partial class SUADICHVU : Form
+    {
+        public SUADICHVU()
+        {
+            InitializeComponent();
+        }
+        public int ID { get; set; }
+        SqlCommand cmd;
+        SqlDataAdapter da;
+        DataTable dt;
+        private void loadcbxldv()
+        {
+            cmd = new SqlCommand("select * from LOAIDICHVU",ClsKetnoiCSDL.Connect());
+            da = new SqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            cbxldv.DataSource = dt;
+            cbxldv.DisplayMember = "TenLoaiDV";
+            cbxldv.ValueMember = "ID";
+            cbxldv.SelectedIndex = -1;
+        }
+        private void btncn_Click(object sender, EventArgs e)
+        {
+            if (txttdv.Text.Equals("")
+               | txtdg.Text.Equals("")
+               | txtdvt.Text.Equals("")
+               | cbxldv.Text.Equals("")
+               )
+            {
+                MessageBox.Show("Thông tin sửa chữa có thông số trống, yêu cầu bổ sung thêm", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                var lenh = @"update DICHVU set IDLoaiDV = @IDLoaiDV, TenDichVu = @TenDichVu, DonGia = @DonGia, DonViTinh = @DonViTinh Where DICHVU.ID = @ID";
+                SqlParameter[] thamsos =
+                    {
+                        new SqlParameter("@ID",ID),
+                        new SqlParameter("@IDLoaiDV",cbxldv.SelectedValue),
+                        new SqlParameter("@TenDichVu",txttdv.Text),
+                        new SqlParameter("@DonGia",txtdg.Text),
+                        new SqlParameter("@DonViTinh",txtdvt.Text),
+                    };
+                int ketqua = ClsThaoTacCSDL.Update(lenh,thamsos,ClsKetnoiCSDL.Connect());
+                if (ketqua != 0)
+                {
+                    this.Close();
+                }
+            }
+        }
+
+        private void SUADICHVU_Load(object sender, EventArgs e)
+        {
+            loadcbxldv();
+            var lenh = "select DICHVU.*,tenloaidv from DICHVU,LOAIDICHVU where IDLoaiDV = LOAIDICHVU.ID and DICHVU.ID = @ID";
+            SqlParameter thamso = new SqlParameter("@ID", ID);
+            var dt = ClsThaoTacCSDL.selectbyID(lenh,thamso,ClsKetnoiCSDL.Connect());
+            txttdv.Text = dt.Rows[0]["TenDichVu"].ToString();
+            txtdg.Text = dt.Rows[0]["DonGia"].ToString();
+            txtdvt.Text = dt.Rows[0]["DonViTinh"].ToString();
+            cbxldv.Text = dt.Rows[0]["TenLoaiDV"].ToString();
+        }
+
+        private void btnx_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
