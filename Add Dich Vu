@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using QLKS.Dungchung;
+namespace QLKS.GiaoDien.DKTHUEPHONG
+{
+    public partial class themdv : Form
+    {
+        public themdv()
+        {
+            InitializeComponent();
+        }
+        SqlCommand cmd;
+        SqlDataAdapter da;
+        DataTable dt;
+        private void loadcbxldv()
+        {
+            cmd = new SqlCommand("select * from LOAIDICHVU", ClsKetnoiCSDL.Connect());
+            da = new SqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            cbxldv.DataSource = dt;
+            cbxldv.DisplayMember = "TenLoaiDV";
+            cbxldv.ValueMember = "ID";
+            cbxldv.SelectedIndex = -1;
+        }
+        private void btncn_Click(object sender, EventArgs e)
+        {
+            if (txttdv.Text.Equals("")
+               | txtdg.Text.Equals("")
+               | txtdvt.Text.Equals("")
+               | cbxldv.Text.Equals("")
+
+               )
+            {
+                MessageBox.Show("Chưa nhập đầy đủ thông tin, yêu cầu bổ sung thêm", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                var lenh = @"Insert DICHVU Values(@idloaidichvu,@tendichvu,@dongia,@donvitinh)";
+                SqlParameter[] thamsos =
+                    {
+
+                        
+                        new SqlParameter("@idloaidichvu",cbxldv.SelectedValue),
+                        new SqlParameter("@tendichvu",txttdv.Text),
+                        new SqlParameter("@dongia",txtdg.Text),
+                        new SqlParameter("@donvitinh",txtdvt.Text),
+                    };
+                int ketqua = ClsThaoTacCSDL.Create(lenh,thamsos,ClsKetnoiCSDL.Connect());
+                if (ketqua != 0)
+                {
+                    this.Close();
+                }
+            }
+        }
+
+        private void btnx_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void themdv_Load(object sender, EventArgs e)
+        {
+            loadcbxldv();
+        }
+    }
+}
