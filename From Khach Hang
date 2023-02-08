@@ -1,0 +1,206 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using QLKS.Dungchung;
+namespace QLKS.GiaoDien.QLKhachHang.KhachHang
+{
+    public partial class FrmKH : Form
+    {
+        public FrmKH()
+        {
+            InitializeComponent();
+        }
+
+        private void FrmKH_Load(object sender, EventArgs e)
+        {
+            loadtreeviewLoaiKH();
+            loadsoluongloaikh();
+            loadtreeviewQuocTich();
+            loadsoluongquoctich();
+            loaddata();
+        }
+        SqlCommand cmd;
+        SqlDataAdapter da;
+        DataTable dt;
+        private void loadtreeviewLoaiKH()
+        {
+            cmd = new SqlCommand("loaikh", ClsKetnoiCSDL.Connect());
+            cmd.CommandType = CommandType.StoredProcedure;
+            da = new SqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            TreeNode node = new TreeNode("Tất cả");
+            node.Tag = "0";
+            tvloaikhachhang.Nodes.Add(node);
+
+            //ĐIỀN dữ liệu lên treeview
+            foreach (DataRow dr in dt.Rows)
+            {
+
+                node = new TreeNode(dr["TenLoaiKH"].ToString());
+                node.Tag = dr["ID"].ToString();
+                tvloaikhachhang.Nodes.Add(node);
+            }
+        }
+        private void loadtreeviewQuocTich()
+        {
+            cmd = new SqlCommand("quoctich1", ClsKetnoiCSDL.Connect());
+            cmd.CommandType = CommandType.StoredProcedure;
+            da = new SqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            TreeNode node = new TreeNode("Tất cả");
+            node.Tag = "0";
+            tvquoctich.Nodes.Add(node);
+
+            //ĐIỀN dữ liệu lên treeview
+            foreach (DataRow dr in dt.Rows)
+            {
+
+                node = new TreeNode(dr["TenQuocTich"].ToString());
+                node.Tag = dr["ID"].ToString();
+                tvquoctich.Nodes.Add(node);
+            }
+        }
+        private void loadsoluongloaikh()
+        {
+            SqlCommand cmd = new SqlCommand("demlkh", ClsKetnoiCSDL.Connect());
+            cmd.CommandType = CommandType.StoredProcedure;
+            var sl = cmd.ExecuteScalar();
+            bdsloaikh.DataSource = dt;
+            txttongloaikh.Text = sl.ToString();
+        }
+        private void loadsoluongquoctich()
+        {
+            SqlCommand cmd = new SqlCommand("quoctichcount", ClsKetnoiCSDL.Connect());
+            cmd.CommandType = CommandType.StoredProcedure;
+            var sl = cmd.ExecuteScalar();
+            bdsquoctich.DataSource = dt;
+            txttongsoquoctich.Text = sl.ToString();
+        }
+        private void loaddata()
+        {
+            var lenh = "select *,TenLoaiKH,TenQuocTich from KHACHHANG,LOAIKHACHHANG,QUOCTICH where LOAIKHACHHANG.ID = IDLoaiKhachHang and QUOCTICH.ID = IDQuocTich";
+            bds.DataSource = ClsThaoTacCSDL.select(lenh, ClsKetnoiCSDL.Connect());
+            txttongsokh.Text = bds.Count.ToString();
+        }
+        private void loadDGV1()
+        {
+
+            var maloaikh = tvloaikhachhang.SelectedNode.Tag;
+            if (maloaikh.ToString() == "0")
+            {
+                loaddata();
+            }
+            else
+            {
+                var lenh = "select *,TenLoaiKH,TenQuocTich from KHACHHANG,LOAIKHACHHANG,QUOCTICH where LOAIKHACHHANG.ID = IDLoaiKhachHang and QUOCTICH.ID = IDQuocTich and IDLoaiKhachHang =" + maloaikh;
+                bds.DataSource = ClsThaoTacCSDL.select(lenh, ClsKetnoiCSDL.Connect());
+                txttongloaikh.Text = bds.Count.ToString();
+            }
+        }
+        private void loadDGV2()
+        {
+
+            var maloaiquoctich = tvquoctich.SelectedNode.Tag;
+            if (maloaiquoctich.ToString() == "0")
+            {
+                loaddata();
+            }
+            else
+            {
+                var lenh = "select *,TenLoaiKH,TenQuocTich from KHACHHANG,LOAIKHACHHANG,QUOCTICH where LOAIKHACHHANG.ID = IDLoaiKhachHang and QUOCTICH.ID = IDQuocTich and IDQuocTich =" + maloaiquoctich;
+                bds.DataSource = ClsThaoTacCSDL.select(lenh, ClsKetnoiCSDL.Connect());
+                txttongloaikh.Text = bds.Count.ToString();
+            }
+        }
+        //private void loaddgvkhachhang()
+        //{
+        //    var ID = tvloaikhachhang.SelectedNode.Tag;
+        //    //MessageBox.Show(ID.ToString());
+        //    if (ID.ToString() == "0")
+        //    {
+        //        cmd = new SqlCommand("kh", ClsKetnoiCSDL.Connect());
+        //        da = new SqlDataAdapter(cmd);
+        //        dt = new DataTable();
+        //        da.Fill(dt);
+        //        dgv.DataSource = dt;
+        //        bds.DataSource = dt;       
+        //        txttongsokh.Text = dt.Rows.Count.ToString();
+        //    }
+        //    else
+        //    {
+        //        cmd = new SqlCommand("KHACHHANG_ID", ClsKetnoiCSDL.Connect());
+        //        cmd.Parameters.AddWithValue("@IDLoaiKhachHang", ID);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        da = new SqlDataAdapter(cmd);
+        //        dt = new DataTable();
+        //        da.Fill(dt);
+        //        dgv.DataSource = dt;
+        //        bds.DataSource = dt;     
+        //        txttongsokh.Text = dt.Rows.Count.ToString();
+        //    }
+        //}
+
+        private void tvloaikhachhang_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            loadDGV1();
+        }
+
+        private void btnthemkh_Click(object sender, EventArgs e)
+        {
+            FrmThemKH frm = new FrmThemKH();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+            loaddata();
+        }
+
+        private void btnxoakh_Click(object sender, EventArgs e)
+        {
+            var Tenkhachhang = dgv.CurrentRow.Cells["TenKhachHang"].Value.ToString();
+            if (MessageBox.Show("bạn có muốn xóa khách hàng:'" + Tenkhachhang + "'không?", "Thông báo",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                var lenh = "delete from KHACHHANG WHERE ID=@ID";
+                SqlParameter thamso = new SqlParameter("@ID", dgv.CurrentRow.Cells["ID"].Value);
+                var kq = ClsThaoTacCSDL.Delete(lenh, thamso, ClsKetnoiCSDL.Connect());
+                if (kq != 0)
+                    loaddata();
+                else
+                    MessageBox.Show(@"Khách hàng này đang được sử dụng ở nghiệp vụ khác");
+            }
+        }
+
+        private void btnsuakh_Click(object sender, EventArgs e)
+        {
+            var ID = Convert.ToInt32(dgv.CurrentRow.Cells["ID"].Value);
+            FrmUpdateKH frm = new FrmUpdateKH();
+            frm.ID = ID;
+            frm.ShowInTaskbar = false;
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.ShowDialog();
+            loaddata();
+        }
+
+        private void txttimkiem_KeyUp(object sender, KeyEventArgs e)
+        {
+            var lenh = @"select KHACHHANG.*,TenLoaiKH,TenQuocTich from KHACHHANG,LOAIKHACHHANG,QUOCTICH where LOAIKHACHHANG.ID = IDLoaiKhachHang and QUOCTICH.ID = IDQuocTich and TenKhachHang like '%'+@tukhoa+'%'";
+            SqlParameter thamso = new SqlParameter("tukhoa", txttimkiem.Text);
+            bds.DataSource = ClsThaoTacCSDL.selectbyname(lenh, thamso, ClsKetnoiCSDL.Connect());
+            txttongsokh.Text = bds.Count.ToString();
+        }
+
+        private void tvquoctich_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            loadDGV2();
+        }
+    }
+}
