@@ -1,0 +1,136 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace QLKS.GiaoDien.MENU
+{
+    public partial class MENU : Form
+    {
+        public MENU()
+        {
+            InitializeComponent();
+        }
+
+        private void kháchHàngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void loạiKháchHàngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.QLKhachHang.LoaiKhachHang.FrmLoaiKhachHang frm = new QLKhachHang.LoaiKhachHang.FrmLoaiKhachHang();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void quốcTịchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.QLKhachHang.QuocTich.FrmQuocTich frm = new QLKhachHang.QuocTich.FrmQuocTich();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void thôngTinKháchHàngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.QLKhachHang.KhachHang.FrmKH frm = new QLKhachHang.KhachHang.FrmKH();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void phiếuĐặtPhòngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.PDP.PHIEUDATPHONG frm = new PDP.PHIEUDATPHONG();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void đặtPhòngKháchSạnToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DATPHONGKS.PHIEUDATPHONG.frmdatphong frm = new DATPHONGKS.PHIEUDATPHONG.frmdatphong();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void phòngKháchSạnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmPHONG frm = new FrmPHONG();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void chiTiếtDịchVụToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DKTHUEPHONG.frmDichvu frm = new DKTHUEPHONG.frmDichvu();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void loạiDịchVụToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.LOAIDV.LOAIDICHVU frm = new LOAIDV.LOAIDICHVU();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void nhânViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DATPHONGKS.NHANVIEN.Frmnhanvien frm = new DATPHONGKS.NHANVIEN.Frmnhanvien();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void hìnhThứcThanhToánToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DATPHONGKS.HINHTHUCTHANHTOAN.Frmhttt frm = new DATPHONGKS.HINHTHUCTHANHTOAN.Frmhttt();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void hìnhThứcThuêPhòngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DATPHONGKS.HINHTHUCTHUEPHONG.Frmhttp frm = new DATPHONGKS.HINHTHUCTHUEPHONG.Frmhttp();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void đăngNhậpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void đăngNhậpToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            GiaoDien.MENU.DANGNHAP frm = new DANGNHAP();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+        }
+
+        private void thoátToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
