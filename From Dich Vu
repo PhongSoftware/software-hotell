@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using QLKS.Dungchung;
+using System.Data;
+namespace QLKS.GiaoDien.DKTHUEPHONG
+{
+    public partial class frmDichvu : Form
+    {
+        public frmDichvu()
+        {
+            InitializeComponent();
+        }
+
+        private void frmDichvu_Load(object sender, EventArgs e)
+        {
+            loaddata();
+        }
+        private void loaddata()
+        {
+            var lenh = "select * from DICHVU";
+            bds.DataSource = ClsThaoTacCSDL.select(lenh, ClsKetnoiCSDL.Connect());
+            lblsoluong.Text = bds.Count.ToString();
+        }
+
+        private void btnthem_Click(object sender, EventArgs e)
+        {
+            GiaoDien.DKTHUEPHONG.themdv frm = new GiaoDien.DKTHUEPHONG.themdv();
+            frm.StartPosition = FormStartPosition.CenterScreen;//giữa màn hình
+            frm.ShowInTaskbar = false;
+            frm.ShowDialog();
+            loaddata();
+        }
+
+        private void btnxoa_Click(object sender, EventArgs e)
+        {
+            var tendichvu = dataGridView1.CurrentRow.Cells["tendichvu"].Value.ToString();
+            if (MessageBox.Show("Bạn có muốn xóa khách hàng: '" + tendichvu + "' không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                var lenh = "delete from DICHVU where ID = @ID";
+                SqlParameter thamso = new SqlParameter("@ID", dataGridView1.CurrentRow.Cells["ID"].Value);
+                var kq = ClsThaoTacCSDL.Delete(lenh, thamso, ClsKetnoiCSDL.Connect()) ;
+                loaddata();
+            }
+        }
+
+        private void btnsua_Click(object sender, EventArgs e)
+        {
+            var ID = Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value);
+            GiaoDien.DICHVU.SUADICHVU frm = new GiaoDien.DICHVU.SUADICHVU();
+            frm.ID = ID;
+            frm.ShowInTaskbar = false;
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.ShowDialog();
+            loaddata();
+        }
+    }
+}
